@@ -75,6 +75,12 @@ class _AddEditProfileState extends State<AddEditProfile> {
                     controllerAge.clear();
                   });
                 }
+              } else if (state is FailureSubmitProfileState) {
+                scaffoldState.currentState.showSnackBar(
+                  SnackBar(
+                    content: Text(state.errorMessage),
+                  ),
+                );
               }
             },
             child: Stack(
