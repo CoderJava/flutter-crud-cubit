@@ -33,6 +33,11 @@ class _AddEditProfileState extends State<AddEditProfile> {
   @override
   void initState() {
     isEdit = widget.profileData != null;
+    if (isEdit) {
+      controllerName.text = widget.profileData.name;
+      controllerEmail.text = widget.profileData.email;
+      controllerAge.text = widget.profileData.age.toString();
+    }
     super.initState();
   }
 
@@ -136,12 +141,22 @@ class _AddEditProfileState extends State<AddEditProfile> {
                     var name = controllerName.text.trim();
                     var email = controllerEmail.text.trim();
                     var age = controllerAge.text.trim();
-                    var profileData = ProfileData(
-                      name: name,
-                      email: email,
-                      age: int.parse(age),
-                    );
-                    profileCubit.addProfile(profileData);
+                    if (isEdit) {
+                      var profileData = ProfileData(
+                        id: widget.profileData.id,
+                        name: name,
+                        email: email,
+                        age: int.parse(age),
+                      );
+                      profileCubit.editProfile(profileData);
+                    } else {
+                      var profileData = ProfileData(
+                        name: name,
+                        email: email,
+                        age: int.parse(age),
+                      );
+                      profileCubit.addProfile(profileData);
+                    }
                   }
                 },
               ),

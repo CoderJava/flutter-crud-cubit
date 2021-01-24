@@ -39,7 +39,7 @@ class DioHelper {
   Future<Either<String, bool>> editProfile(ProfileData profileData) async {
     try {
       await _dio.put(
-        '/profile/:${profileData.id}',
+        '/profile/${profileData.id}',
         data: profileData.toJson(),
       );
       return Right(true);

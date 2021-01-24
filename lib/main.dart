@@ -106,8 +106,18 @@ class _ListProfilePageState extends State<ListProfilePage> {
                                 FlatButton(
                                   child: Text('EDIT'),
                                   textColor: Colors.blue,
-                                  onPressed: () {
-                                    // TODO: buat fitur edit profile
+                                  onPressed: () async {
+                                    var result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => AddEditProfile(
+                                          profileData: profileData,
+                                        ),
+                                      ),
+                                    );
+                                    if (result != null) {
+                                      profileCubit.getAllProfiles();
+                                    }
                                   },
                                 ),
                               ],
