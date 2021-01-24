@@ -38,10 +38,24 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void deleteProfile(int id) async {
     emit(LoadingProfileState());
-    var result = await dioHelper.deleteProfile(id);
-    result.fold(
-      (errorMessage) => emit(FailureDeleteProfileState(errorMessage)),
-      (_) => emit(SuccessDeleteProfileState()),
+    var resultDelete = await dioHelper.deleteProfile(id);
+    var resultDeleteFold = resultDelete.fold(
+      (errorMessage) => errorMessage,
+      (response) => response,
+    );
+    if (resultDeleteFold is String) {
+      emit(FailureDeleteProfileState(resultDeleteFold));
+      return;
+    }
+    var resultGetAllProfiles = await dioHelper.getAllProfiles();
+    resultGetAllProfiles.fold(
+      (errorMessage) => emit(FailureLoadAllProfileState(errorMessage)),
+      (listProfiles) => emit(
+        SuccessLoadAllProfileState(
+          listProfiles,
+          message: 'Profile data deleted successfully',
+        ),
+      ),
     );
   }
 }

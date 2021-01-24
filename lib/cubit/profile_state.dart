@@ -19,12 +19,13 @@ class FailureLoadAllProfileState extends ProfileState {
 
 class SuccessLoadAllProfileState extends ProfileState {
   final List<ProfileData> listProfiles;
+  final String message;
 
-  SuccessLoadAllProfileState(this.listProfiles);
+  SuccessLoadAllProfileState(this.listProfiles, {this.message});
 
   @override
   String toString() {
-    return 'SuccessLoadAllProfileState{listProfiles: $listProfiles}';
+    return 'SuccessLoadAllProfileState{listProfiles: $listProfiles, message: $message}';
   }
 }
 
@@ -51,5 +52,3 @@ class FailureDeleteProfileState extends ProfileState {
     return 'FailureDeleteProfileState{errorMessage: $errorMessage}';
   }
 }
-
-class SuccessDeleteProfileState extends ProfileState {}

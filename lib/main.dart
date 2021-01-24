@@ -54,7 +54,18 @@ class _ListProfilePageState extends State<ListProfilePage> {
                 ),
               );
             } else if (state is FailureDeleteProfileState) {
-              // TODO: handle failure delete profile state
+              scaffoldState.currentState.showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMessage),
+                ),
+              );
+            } else if (state is SuccessLoadAllProfileState) {
+              if (state.message != null && state.message.isNotEmpty)
+              scaffoldState.currentState.showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
             }
           },
           child: BlocBuilder<ProfileCubit, ProfileState>(
@@ -99,8 +110,68 @@ class _ListProfilePageState extends State<ListProfilePage> {
                                 FlatButton(
                                   child: Text('DELETE'),
                                   textColor: Colors.red,
-                                  onPressed: () {
-                                    // TODO: buat fitur delete profile
+                                  onPressed: () async {
+                                    var dialogConfirmDelete = Platform.isIOS
+                                        ? await showCupertinoDialog<bool>(
+                                            context: context,
+                                            builder: (_) {
+                                              return CupertinoAlertDialog(
+                                                title: Text('Warning'),
+                                                content: Text(
+                                                  'Are you sure you want to delete ${profileData.name}\'s data?',
+                                                ),
+                                                actions: [
+                                                  CupertinoDialogAction(
+                                                    child: Text('Delete'),
+                                                    onPressed: () {
+                                                      Navigator.pop(context, true);
+                                                    },
+                                                    isDestructiveAction: true,
+                                                  ),
+                                                  CupertinoDialogAction(
+                                                    child: Text('Cancel'),
+                                                    onPressed: () {
+                                                      Navigator.pop(context, false);
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          )
+                                        : await showDialog<bool>(
+                                            context: context,
+                                            builder: (_) {
+                                              return AlertDialog(
+                                                title: Text('Warning'),
+                                                content: Text(
+                                                  'Are you sure you want to delete ${profileData.name}\'s data?',
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    child: Text(
+                                                      'Delete',
+                                                      style: TextStyle(color: Colors.red),
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.pop(context, true);
+                                                    },
+                                                  ),
+                                                  TextButton(
+                                                    child: Text(
+                                                      'Cancel',
+                                                      style: TextStyle(color: Colors.blue),
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.pop(context, false);
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                    if (dialogConfirmDelete != null && dialogConfirmDelete) {
+                                      profileCubit.deleteProfile(profileData.id);
+                                    }
                                   },
                                 ),
                                 FlatButton(
